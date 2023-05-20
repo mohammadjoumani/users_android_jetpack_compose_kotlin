@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Madar Soft Task</string>
+    <string name="strAge">Age</string>
+    <string name="strJob">JobTitle</string>
+    <string name="strName">Name</string>
+    <string name="strTheFieldCanNotBeBlank">The field can\'t be blank</string>
+    <string name="strAdd">Add</string>
+    <string name="strGender">Gender</string>
+    <string name="strMale">Male</string>
+    <string name="strFemale">Female</string>
+    <string name="strNoData">No data</string>
+    <string name="strError">Error</string>
+</resources>
