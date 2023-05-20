@@ -34,7 +34,8 @@ import androidx.navigation.NavController
 import com.mmj.madarsofttask.R
 import com.mmj.madarsofttask.presentation.component.ItemSelectRadioButton
 import com.mmj.madarsofttask.presentation.main.MainViewModel
-import com.mmj.validation.presentation.component.CustomTextFieldApp
+import com.mmj.madarsofttask.presentation.util.UIState
+import com.mmj.madarsofttask.presentation.component.CustomTextFieldApp
 
 @Composable
 fun AddUserScreen(
@@ -44,8 +45,9 @@ fun AddUserScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state.value
-    LaunchedEffect(state) {
-        if (state.isSuccess) {
+    val uiState = viewModel.state.value.uiState
+    LaunchedEffect(uiState) {
+        if (uiState == UIState.Success) {
             navController.popBackStack()
             Toast.makeText(context, "Added success", Toast.LENGTH_LONG).show()
             mainViewModel.isAdd.value = true
@@ -193,7 +195,7 @@ fun AddUserScreen(
 
             Spacer(modifier = Modifier.padding(8.dp))
 
-            if (state.isLoading) {
+            if (uiState == UIState.Loading) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }

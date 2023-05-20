@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -45,6 +44,7 @@ import com.mmj.madarsofttask.presentation.main.MainViewModel
 import com.mmj.madarsofttask.presentation.resources.route.ADD_USER_SCREEN
 import com.mmj.madarsofttask.presentation.resources.theme.colorFemale
 import com.mmj.madarsofttask.presentation.resources.theme.colorMale
+import com.mmj.madarsofttask.presentation.util.UIState
 
 @Composable
 fun UsersScreen(
@@ -93,35 +93,47 @@ fun UsersScreen(
             }
         }
     ) {
-        Box(Modifier.fillMaxSize()
+        Box(
+            Modifier.fillMaxSize()
         ) {
-            val state = viewModel.state
-            if (state.value.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (state.value.isSuccess) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                ) {
-                    item {
-                        Spacer(modifier = Modifier.padding(4.dp))
-                    }
-                    val users = state.value.users
-                    items(count = users.size) {
-                        ItemUser(users[it])
+            val state = viewModel.state.value
+            val uistate = viewModel.state.value.uiState
+            when (uistate) {
+                UIState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+
+                UIState.Success -> {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
+                        item {
+                            Spacer(modifier = Modifier.padding(4.dp))
+                        }
+                        val users = state.users
+                        items(count = users.size) {
+                            ItemUser(users[it])
+                        }
                     }
                 }
-            } else if (state.value.isEmpty) {
-                ItemMessage(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = stringResource(id = R.string.strNoData)
-                )
-            } else if (state.value.isError) {
-                ItemMessage(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = stringResource(id = R.string.strError)
-                )
+
+                UIState.Empty -> {
+                    ItemMessage(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = stringResource(id = R.string.strNoData)
+                    )
+                }
+
+                UIState.Error -> {
+                    ItemMessage(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = stringResource(id = R.string.strError)
+                    )
+                }
+
+                else -> {}
             }
         }
     }
@@ -148,7 +160,7 @@ private fun ItemUser(user: User) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = if(user.gender == 0)
+                painter = if (user.gender == 0)
                     painterResource(id = R.drawable.img_male_place_holder)
                 else
                     painterResource(id = R.drawable.img_female_place_holder),

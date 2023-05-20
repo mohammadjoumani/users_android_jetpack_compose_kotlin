@@ -9,6 +9,7 @@ import com.mmj.madarsofttask.core.generic.UiText
 import com.mmj.madarsofttask.domain.model.User
 import com.mmj.madarsofttask.domain.usercase.AddUserUseCase
 import com.mmj.madarsofttask.domain.usercase.validation.ValidateTextUseCase
+import com.mmj.madarsofttask.presentation.util.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,11 +63,7 @@ class AddUserViewModel @Inject constructor(
     }
 
     private suspend fun addUser() {
-        _state.value = _state.value.copy(
-            isLoading = true,
-            isSuccess = false,
-            isError = false,
-        )
+        _state.value = _state.value.copy(uiState = UIState.Loading)
         addUserUseCase.execute(
             User(
                 name = _state.value.name,
@@ -77,19 +74,11 @@ class AddUserViewModel @Inject constructor(
         ).let {
             when (it) {
                 is DataState.Success -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        isSuccess = true,
-                        isError = false,
-                    )
+                    _state.value = _state.value.copy(uiState = UIState.Success)
                 }
 
                 is DataState.Failure -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        isSuccess = false,
-                        isError = true,
-                    )
+                    _state.value = _state.value.copy(uiState = UIState.Error)
                 }
             }
         }
@@ -119,9 +108,7 @@ sealed class AddUserEvent {
 }
 
 data class AddUserState(
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val isError: Boolean = false,
+    val uiState: UIState = UIState.Init,
     val name: String = "",
     val nameError: UiText? = null,
     val age: Int = 18,

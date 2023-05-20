@@ -1,4 +1,4 @@
-package com.mmj.validation.presentation.component
+package com.mmj.madarsofttask.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.mmj.madarsofttask.core.generic.DataState
 import com.mmj.madarsofttask.domain.model.User
 import com.mmj.madarsofttask.domain.usercase.GetUsersUseCase
+import com.mmj.madarsofttask.presentation.util.UIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,39 +35,18 @@ class UsersViewModel @Inject constructor(
     }
 
     private suspend fun getUsers() {
-        _state.value = _state.value.copy(
-            isLoading = true,
-            isSuccess = false,
-            isError = false,
-            isEmpty = false
-        )
+        _state.value = _state.value.copy(uiState = UIState.Loading)
         getUsersUseCase.execute(Unit).let {
             when(it) {
                 is DataState.Success -> {
                     if (it.data.isEmpty()) {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            isSuccess = false,
-                            isError = false,
-                            isEmpty = true
-                        )
+                        _state.value = _state.value.copy(uiState = UIState.Empty)
                     } else {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            isSuccess = true,
-                            isError = false,
-                            isEmpty = false,
-                            users = it.data
-                        )
+                        _state.value = _state.value.copy(uiState = UIState.Success, users = it.data)
                     }
                 }
                 is DataState.Failure -> {
-                    _state.value = _state.value.copy(
-                        isLoading = false,
-                        isSuccess = false,
-                        isError = true,
-                        isEmpty = false
-                    )
+                    _state.value = _state.value.copy(uiState = UIState.Error)
                 }
             }
         }
@@ -78,9 +58,6 @@ sealed class UsersEvent {
 }
 
 data class UsersState(
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val isError: Boolean = false,
-    val isEmpty: Boolean = false,
+    val uiState: UIState = UIState.Init,
     val users: List<User> = listOf()
 )
