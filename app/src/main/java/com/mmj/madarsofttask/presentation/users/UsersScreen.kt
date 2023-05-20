@@ -148,7 +148,10 @@ private fun ItemUser(user: User) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img_male_place_holder),
+                painter = if(user.gender == 0)
+                    painterResource(id = R.drawable.img_male_place_holder)
+                else
+                    painterResource(id = R.drawable.img_female_place_holder),
                 contentDescription = "Image User",
                 modifier = Modifier
                     .clip(CircleShape)

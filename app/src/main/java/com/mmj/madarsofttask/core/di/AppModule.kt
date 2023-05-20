@@ -33,22 +33,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesUpdateUserUseCase(
-        userRepository: UserRepository
-    ): UpdateUserUseCase {
-        return UpdateUserUseCase(userRepository)
-    }
-
-    @Singleton
-    @Provides
-    fun providesDeleteUserUseCase(
-        userRepository: UserRepository
-    ): DeleteUserUseCase {
-        return DeleteUserUseCase(userRepository)
-    }
-
-    @Singleton
-    @Provides
     fun providesGetUsersUseCase(
         userRepository: UserRepository
     ): GetUsersUseCase {
